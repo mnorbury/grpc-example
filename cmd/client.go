@@ -5,6 +5,7 @@ import (
 
 	"github.com/mnorbury/grpc-example/client"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 	"google.golang.org/grpc"
 )
 
@@ -46,6 +47,17 @@ var bidirectionalStreamCmd = &cobra.Command{
 	},
 }
 
+var squareRootCmd = &cobra.Command{
+	Use:   "square_root",
+	Short: "Calculate the square root",
+	Run: func(cmd *cobra.Command, args []string) {
+		value := viper.GetInt64("value")
+		runClient(func(conn *grpc.ClientConn) error {
+			return client.RunSquareRoot(conn, value)
+		})
+	},
+}
+
 func runClient(fn func(conn *grpc.ClientConn) error) {
 	cc, err := grpc.Dial("localhost:8080", grpc.WithInsecure())
 	if err != nil {
@@ -65,4 +77,8 @@ func init() {
 	clientCmd.AddCommand(clientStreamCmd)
 	clientCmd.AddCommand(serverStreamCmd)
 	clientCmd.AddCommand(bidirectionalStreamCmd)
+	clientCmd.AddCommand(squareRootCmd)
+
+	squareRootCmd.PersistentFlags().Int64("value", 400, "value to use for square root")
+	_ = viper.BindPFlag("value", squareRootCmd.PersistentFlags().Lookup("value"))
 }
