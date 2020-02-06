@@ -36,6 +36,14 @@ message MaxResponse {
     int64 result = 1;
 }
 
+message SquareRootRequest {
+    int64 value = 1;
+}
+
+message SquareRootResponse {
+    double result = 1;
+}
+
 service CalculatorService {
     // Sum of two numbers - Unary operation
     rpc Sum (SumRequest) returns (SumResponse) {
@@ -52,4 +60,9 @@ service CalculatorService {
     // Maximum number - Bidirectional streaming
     rpc Max (stream MaxRequest) returns (stream MaxResponse) {
     };
+
+    // Square root - returns an error if input is negative
+    rpc SquareRoot (SquareRootRequest) returns (SquareRootResponse) {
+
+    }
 }
