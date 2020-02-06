@@ -4,9 +4,13 @@ import (
 	"io"
 
 	"github.com/mnorbury/grpc-example/calculatorpb"
+	log "github.com/sirupsen/logrus"
 )
 
 func (calculatorService) SumStream(stream calculatorpb.CalculatorService_SumStreamServer) error {
+	log.Infof("Got a SumStream request: %v", stream)
+	defer log.Info("Finished SumStream request")
+
 	var result int64
 
 	for {
@@ -18,8 +22,11 @@ func (calculatorService) SumStream(stream calculatorpb.CalculatorService_SumStre
 			return err
 		}
 
+		log.Infof("Received request: %v", req)
 		result += req.GetValue()
 	}
 
-	return stream.SendAndClose(&calculatorpb.SumStreamResponse{Result: result})
+	resp := &calculatorpb.SumStreamResponse{Result: result}
+	log.Infof("Sending response: %v", resp)
+	return stream.SendAndClose(resp)
 }

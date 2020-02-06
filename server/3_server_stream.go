@@ -1,8 +1,14 @@
 package server
 
-import "github.com/mnorbury/grpc-example/calculatorpb"
+import (
+	"github.com/mnorbury/grpc-example/calculatorpb"
+	log "github.com/sirupsen/logrus"
+)
 
 func (calculatorService) Fibonacci(req *calculatorpb.FibonacciRequest, stream calculatorpb.CalculatorService_FibonacciServer) error {
+	log.Infof("Got a Fibonacci request: %v", req)
+	defer log.Info("Finished Fibonacci request")
+
 	f := fib()
 
 	max := req.GetValue()
@@ -11,7 +17,9 @@ func (calculatorService) Fibonacci(req *calculatorpb.FibonacciRequest, stream ca
 		if v > max {
 			break
 		}
-		if err := stream.Send(&calculatorpb.FibonacciResponse{Result: v}); err != nil {
+		resp := &calculatorpb.FibonacciResponse{Result: v}
+		log.Infof("Sending response: %v", resp)
+		if err := stream.Send(resp); err != nil {
 			return err
 		}
 	}

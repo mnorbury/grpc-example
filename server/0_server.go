@@ -4,6 +4,7 @@ import (
 	"net"
 
 	"github.com/mnorbury/grpc-example/calculatorpb"
+	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
@@ -17,6 +18,11 @@ type calculatorService struct {
 
 // StartServer starts a gRPC server and listens forever
 func StartServer() error {
+	logrus.SetFormatter(&logrus.TextFormatter{
+		FullTimestamp: true,
+	})
+
+	// Open up a port for listening
 	l, err := net.Listen("tcp", ":8080")
 	if err != nil {
 		return err
