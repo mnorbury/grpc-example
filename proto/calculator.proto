@@ -1,0 +1,67 @@
+syntax = "proto3";
+
+package calculator;
+option go_package = "calculatorpb";
+
+message SumRequest {
+    int64 a = 1;
+    int64 b = 2;
+}
+
+message SumResponse {
+    int64 result = 1;
+}
+
+message SumStreamRequest {
+    int64 value = 1;
+}
+
+message SumStreamResponse {
+    int64 result = 1;
+}
+
+message FibonacciRequest {
+    int64 value = 1;
+}
+
+message FibonacciResponse {
+    int64 result = 1;
+}
+
+message MaxRequest {
+    int64 value = 1;
+}
+
+message MaxResponse {
+    int64 result = 1;
+}
+
+message SquareRootRequest {
+    int64 value = 1;
+}
+
+message SquareRootResponse {
+    double result = 1;
+}
+
+service CalculatorService {
+    // Sum of two numbers - Unary operation
+    rpc Sum (SumRequest) returns (SumResponse) {
+    };
+
+    // Sum of a client stream - Client streaming
+    rpc SumStream (stream SumStreamRequest) returns (SumStreamResponse) {
+    };
+
+    // Fibonacci generator - Server streaming
+    rpc Fibonacci (FibonacciRequest) returns (stream FibonacciResponse) {
+    };
+
+    // Maximum number - Bidirectional streaming
+    rpc Max (stream MaxRequest) returns (stream MaxResponse) {
+    };
+
+    // Square root - returns an error if input is negative
+    rpc SquareRoot (SquareRootRequest) returns (SquareRootResponse) {
+    };
+}

@@ -1,3 +1,9 @@
+# IDE
+.idea
+
+# Application
+grpc-example
+
 # Binaries for programs and plugins
 *.exe
 *.exe~
